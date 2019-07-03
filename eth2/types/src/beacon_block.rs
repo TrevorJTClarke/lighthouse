@@ -40,7 +40,7 @@ impl BeaconBlock {
     pub fn empty(spec: &ChainSpec) -> BeaconBlock {
         BeaconBlock {
             slot: spec.genesis_slot,
-            previous_block_root: spec.zero_hash,
+            parent_root: spec.zero_hash,
             state_root: spec.zero_hash,
             body: BeaconBlockBody {
                 randao_reveal: Signature::empty_signature(),
@@ -79,7 +79,7 @@ impl BeaconBlock {
     pub fn block_header(&self) -> BeaconBlockHeader {
         BeaconBlockHeader {
             slot: self.slot,
-            previous_block_root: self.previous_block_root,
+            parent_root: self.parent_root,
             state_root: self.state_root,
             block_body_root: Hash256::from_slice(&self.body.tree_hash_root()[..]),
             signature: self.signature.clone(),
