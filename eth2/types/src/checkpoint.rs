@@ -1,24 +1,20 @@
 use crate::test_utils::TestRandom;
-use crate::{Checkpoint, Crosslink, Hash256};
-
+use crate::{Epoch, Hash256};
 use serde_derive::{Deserialize, Serialize};
 use ssz_derive::{Decode, Encode};
 use test_random_derive::TestRandom;
 use tree_hash::TreeHash;
 use tree_hash_derive::{CachedTreeHash, SignedRoot, TreeHash};
 
-/// The data upon which an attestation is based.
+/// Casper FFG checkpoint, used in attestations.
 ///
 /// Spec v0.8.0
 #[derive(
     Debug,
     Clone,
     PartialEq,
-    Eq,
-    Default,
     Serialize,
     Deserialize,
-    Hash,
     Encode,
     Decode,
     TreeHash,
@@ -26,22 +22,15 @@ use tree_hash_derive::{CachedTreeHash, SignedRoot, TreeHash};
     TestRandom,
     SignedRoot,
 )]
-pub struct AttestationData {
-    // LMD GHOST vote
-    pub beacon_block_root: Hash256,
-
-    // FFG Vote
-    pub source: Checkpoint,
-    pub target: Checkpoint,
-
-    // Crosslink Vote
-    pub crosslink: Crosslink,
+pub struct Checkpoint {
+    pub epoch: Epoch,
+    pub root: Hash256,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    ssz_tests!(AttestationData);
-    cached_tree_hash_tests!(AttestationData);
+    ssz_tests!(Checkpoint);
+    cached_tree_hash_tests!(Checkpoint);
 }

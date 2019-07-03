@@ -81,48 +81,52 @@ pub struct BeaconState<T>
 where
     T: EthSpec,
 {
-    // Misc
-    pub slot: Slot,
+    // Versioning
     pub genesis_time: u64,
+    pub slot: Slot,
     pub fork: Fork,
 
-    // Validator registry
-    #[compare_fields(as_slice)]
-    pub validator_registry: Vec<Validator>,
-    #[compare_fields(as_slice)]
-    pub balances: Vec<u64>,
-
-    // Randomness and committees
-    pub latest_randao_mixes: FixedLenVec<Hash256, T::LatestRandaoMixesLength>,
-    pub latest_start_shard: u64,
-
-    // Finality
-    pub previous_epoch_attestations: Vec<PendingAttestation>,
-    pub current_epoch_attestations: Vec<PendingAttestation>,
-    pub previous_justified_epoch: Epoch,
-    pub current_justified_epoch: Epoch,
-    pub previous_justified_root: Hash256,
-    pub current_justified_root: Hash256,
-    pub justification_bitfield: u64,
-    pub finalized_epoch: Epoch,
-    pub finalized_root: Hash256,
-
-    // Recent state
-    pub current_crosslinks: FixedLenVec<Crosslink, T::ShardCount>,
-    pub previous_crosslinks: FixedLenVec<Crosslink, T::ShardCount>,
-    pub latest_block_roots: FixedLenVec<Hash256, T::SlotsPerHistoricalRoot>,
-    #[compare_fields(as_slice)]
-    pub latest_state_roots: FixedLenVec<Hash256, T::SlotsPerHistoricalRoot>,
-    #[compare_fields(as_slice)]
-    latest_active_index_roots: FixedLenVec<Hash256, T::LatestActiveIndexRootsLength>,
-    latest_slashed_balances: FixedLenVec<u64, T::LatestSlashedExitLength>,
+    // History
     pub latest_block_header: BeaconBlockHeader,
+    pub block_roots: FixedLenVec<Hash256, T::SlotsPerHistoricalRoot>,
+    #[compare_fields(as_slice)]
+    pub state_roots: FixedLenVec<Hash256, T::SlotsPerHistoricalRoot>,
     pub historical_roots: Vec<Hash256>,
 
     // Ethereum 1.0 chain data
-    pub latest_eth1_data: Eth1Data,
+    pub eth1_data: Eth1Data,
     pub eth1_data_votes: Vec<Eth1Data>,
-    pub deposit_index: u64,
+    pub eth1_deposit_index: u64,
+
+    // Registry
+    #[compare_fields(as_slice)]
+    pub validators: Vec<Validator>,
+    #[compare_fields(as_slice)]
+    pub balances: Vec<u64>,
+
+    // Shuffling
+    pub start_shard: u64,
+    pub randao_mixes: FixedLenVec<Hash256, T::EpochsPerHistoricalVector>,
+    #[compare_fields(as_slice)]
+    active_index_roots: FixedLenVec<Hash256, T::EpochsPerHistoricalVector>,
+    compact_committee_roots: FixedLenVec<Hash256, T::EpochsPerHistoricalVector>,
+
+    // Slashings
+    slashings: FixedLenVec<Hash256, T::EpochsPerSlashingsVector>,
+
+    // Attestations
+    pub previous_epoch_attestations: Vec<PendingAttestation>,
+    pub current_epoch_attestations: Vec<PendingAttestation>,
+
+    // Crosslinks
+    pub previous_crosslinks: FixedLenVec<Crosslink, T::ShardCount>,
+    pub current_crosslinks: FixedLenVec<Crosslink, T::ShardCount>,
+
+    // Finality
+    pub justification_bits: Bitfield,
+    pub previous_justified_checkpoint: Checkpoint,
+    pub current_justified_checkpoint: Checkpoint,
+    pub finalized_checkpoint: Checkpoint,
 
     // Caching (not in the spec)
     #[serde(default)]

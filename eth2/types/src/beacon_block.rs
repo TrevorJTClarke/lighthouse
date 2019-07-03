@@ -10,7 +10,7 @@ use tree_hash_derive::{CachedTreeHash, SignedRoot, TreeHash};
 
 /// A block of the `BeaconChain`.
 ///
-/// Spec v0.6.3
+/// Spec v0.8.0
 #[derive(
     Debug,
     PartialEq,
@@ -26,7 +26,7 @@ use tree_hash_derive::{CachedTreeHash, SignedRoot, TreeHash};
 )]
 pub struct BeaconBlock {
     pub slot: Slot,
-    pub previous_block_root: Hash256,
+    pub parent_root: Hash256,
     pub state_root: Hash256,
     pub body: BeaconBlockBody,
     #[signed_root(skip_hashing)]

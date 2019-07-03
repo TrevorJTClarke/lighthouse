@@ -9,7 +9,7 @@ use tree_hash_derive::{CachedTreeHash, SignedRoot, TreeHash};
 
 /// Details an attestation that can be slashable.
 ///
-/// Spec v0.6.3
+/// Spec v0.8.0
 #[derive(
     Debug,
     Clone,
@@ -24,7 +24,7 @@ use tree_hash_derive::{CachedTreeHash, SignedRoot, TreeHash};
     SignedRoot,
 )]
 pub struct Attestation {
-    pub aggregation_bitfield: Bitfield,
+    pub aggregation_bits: Bitfield,
     pub data: AttestationData,
     pub custody_bitfield: Bitfield,
     #[signed_root(skip_hashing)]
